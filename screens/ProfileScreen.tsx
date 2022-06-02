@@ -1,5 +1,6 @@
 import { Entypo, Feather } from "@expo/vector-icons";
-import { Image, StyleSheet, useColorScheme } from "react-native";
+import React from "react";
+import { Image, ScrollView, StyleSheet, useColorScheme } from "react-native";
 import pins from "../assets/data/pins";
 import MasonryList from "../components/MasonryList";
 import { Text, View } from "../components/Themed";
@@ -9,7 +10,7 @@ export default function ProfileScreen() {
   const isDarkMode = colorScheme === "dark";
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <View style={styles.info}>
         <View style={styles.iconContainer}>
           <Feather size={24} name="share" color="gray" style={styles.icon} />
@@ -34,7 +35,7 @@ export default function ProfileScreen() {
         </Text>
       </View>
       <MasonryList pins={pins} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -42,16 +43,14 @@ const styles = StyleSheet.create({
   info: {
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eeeeee",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    margin: 10,
+    margin: 15,
   },
   image: {
-    width: 150,
+    width: 200,
     aspectRatio: 1,
     borderRadius: 200,
   },
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     alignSelf: "flex-end",
-    padding: 8,
+    padding: 10,
   },
   icon: {
     paddingHorizontal: 10,
