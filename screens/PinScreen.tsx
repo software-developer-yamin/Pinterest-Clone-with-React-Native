@@ -5,6 +5,7 @@ import {
   Text,
   View,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import pins from "../assets/data/pins";
@@ -31,14 +32,14 @@ const PinScreen = () => {
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>
       <StatusBar style="light" />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Image
           source={{ uri: image }}
           style={{ ...styles.image, aspectRatio: ratio }}
           resizeMode="cover"
         />
-        <Text style={{ ...styles.title,}}>{title}</Text>
-      </View>
+        <Text style={{ ...styles.title }}>{title}</Text>
+      </ScrollView>
       <Ionicons
         onPress={() => navigation.goBack()}
         name="chevron-back"
