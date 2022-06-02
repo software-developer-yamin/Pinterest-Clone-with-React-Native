@@ -36,3 +36,9 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
     BottomTabScreenProps<RootTabParamList, Screen>,
     NativeStackScreenProps<RootStackParamList>
   >;
+
+export interface IMasonryList {
+  id: string;
+  image: string;
+  title: string;
+}
