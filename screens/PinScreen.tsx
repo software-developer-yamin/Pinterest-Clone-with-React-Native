@@ -14,7 +14,7 @@ const PinScreen = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
-  const {id} = route?.params;
+  const {id}: any =  route?.params;
   const { image, title, } = pins[id];
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const PinScreen = () => {
         />
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Ionicons
+      <Ionicons 
         onPress={() => navigation.goBack()}
         name="chevron-back"
         size={35}
