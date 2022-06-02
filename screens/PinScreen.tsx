@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import pins from "../assets/data/pins";
 import {
@@ -14,8 +21,8 @@ const PinScreen = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
-  const {id}: any =  route?.params;
-  const { image, title, } = pins[id];
+  const { id }: any = route?.params;
+  const { image, title } = pins[id];
 
   useEffect(() => {
     image && Image.getSize(image, (width, height) => setRatio(width / height));
@@ -30,9 +37,9 @@ const PinScreen = () => {
           style={{ ...styles.image, aspectRatio: ratio }}
           resizeMode="cover"
         />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={{ ...styles.title,}}>{title}</Text>
       </View>
-      <Ionicons 
+      <Ionicons
         onPress={() => navigation.goBack()}
         name="chevron-back"
         size={35}

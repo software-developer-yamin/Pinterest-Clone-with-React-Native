@@ -1,10 +1,13 @@
 import { Entypo, Feather } from "@expo/vector-icons";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, useColorScheme } from "react-native";
 import pins from "../assets/data/pins";
 import MasonryList from "../components/MasonryList";
 import { Text, View } from "../components/Themed";
 
 export default function ProfileScreen() {
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.info}>
@@ -24,7 +27,11 @@ export default function ProfileScreen() {
           style={styles.image}
         />
         <Text style={styles.title}>Yamin</Text>
-        <Text style={styles.subtitle}>123 Follower | 456 Followings</Text>
+        <Text
+          style={{ ...styles.subtitle, color: isDarkMode ? "white" : "black" }}
+        >
+          123 Follower | 456 Followings
+        </Text>
       </View>
       <MasonryList pins={pins} />
     </View>

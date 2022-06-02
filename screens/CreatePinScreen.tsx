@@ -8,12 +8,14 @@ import {
   Pressable,
   Text,
   TextInput,
+  useColorScheme,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
 const CreatePinScreen = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -39,8 +41,21 @@ const CreatePinScreen = () => {
         paddingHorizontal: 10,
       }}
     >
-      <Pressable onPress={pickImage} style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Upload Your Pin</Text>
+      <Pressable
+        onPress={pickImage}
+        style={{
+          ...styles.buttonContainer,
+          backgroundColor: isDarkMode ? "white" : "black",
+        }}
+      >
+        <Text
+          style={{
+            ...styles.buttonText,
+            color: isDarkMode ? "black" : "white",
+          }}
+        >
+          Upload Your Pin
+        </Text>
       </Pressable>
       {image && (
         <>
@@ -56,11 +71,25 @@ const CreatePinScreen = () => {
           <TextInput
             placeholder="Tittle..."
             value={title}
+            placeholderTextColor={isDarkMode ? "white" : "black"}
             onChangeText={setTitle}
-            style={styles.input}
+            style={{ ...styles.input,color: isDarkMode ? "white" : "black" }}
           />
-          <Pressable onPress={pickImage} style={styles.submitButton}>
-            <Text style={styles.submitText}>Submit Pin</Text>
+          <Pressable
+            onPress={pickImage}
+            style={{
+              ...styles.submitButton,
+              backgroundColor: isDarkMode ? "white" : "black",
+            }}
+          >
+            <Text
+              style={{
+                ...styles.submitText,
+                color: isDarkMode ? "black" : "white",
+              }}
+            >
+              Submit Pin
+            </Text>
           </Pressable>
         </>
       )}
@@ -73,13 +102,11 @@ export default CreatePinScreen;
 const styles = StyleSheet.create({
   buttonContainer: {
     padding: 10,
-    backgroundColor: "black",
     width: "90%",
     borderRadius: 50,
   },
   buttonText: {
     fontWeight: "bold",
-    color: "white",
     textAlign: "center",
     fontSize: 18,
   },
@@ -92,14 +119,12 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     padding: 10,
-    backgroundColor: "black",
     width: "50%",
     borderRadius: 50,
     marginTop: 20,
   },
   submitText: {
     fontWeight: "bold",
-    color: "white",
     textAlign: "center",
     fontSize: 16,
     fontStyle: "italic",

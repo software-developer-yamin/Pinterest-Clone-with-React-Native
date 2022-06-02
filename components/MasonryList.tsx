@@ -1,5 +1,10 @@
-import React from "react";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { IMasonryList } from "../types";
 import Pin from "./Pin";
 import { Text, View } from "./Themed";
@@ -9,23 +14,19 @@ interface Props {
 }
 
 const MasonryList = ({ pins }: Props) => {
+  const numColumns = Math.ceil(useWindowDimensions().width / 350);
   return (
-    <ScrollView showsVerticalScrollIndicator={false} >
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <View style={styles.column}>
-          {pins
-            .filter((_, index) => index % 2 === 0)
-            .map((pin) => (
-              <Pin key={pin.id} {...pin} />
-            ))}
-        </View>
-        <View style={styles.column}>
-          {pins
-            .filter((_, index) => index % 2 === 1)
-            .map((pin) => (
-              <Pin key={pin.id} {...pin} />
-            ))}
-        </View>
+        {Array.from(Array(numColumns)).map((_, colIndex) => (
+          <View key={colIndex} style={styles.column}>
+            {pins
+              .filter((_, index) => index % numColumns === colIndex)
+              .map((pin) => (
+                <Pin key={pin.id} {...pin} />
+              ))}
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
