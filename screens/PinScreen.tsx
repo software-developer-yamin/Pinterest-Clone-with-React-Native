@@ -7,11 +7,15 @@ import {
 } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PinScreen = () => {
-  const { image, title } = pins[0];
   const [ratio, setRatio] = useState(1);
   const { top } = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const {id} = route?.params;
+  const { image, title, } = pins[id];
 
   useEffect(() => {
     image && Image.getSize(image, (width, height) => setRatio(width / height));
@@ -29,6 +33,7 @@ const PinScreen = () => {
         <Text style={styles.title}>{title}</Text>
       </View>
       <Ionicons
+        onPress={() => navigation.goBack()}
         name="chevron-back"
         size={35}
         color="white"
