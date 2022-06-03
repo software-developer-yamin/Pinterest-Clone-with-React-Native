@@ -6,9 +6,10 @@ import {
   View,
   useColorScheme,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import pins from "../assets/data/pins";
+//import pins from "../assets/data/pins";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -16,29 +17,65 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNhostClient } from "@nhost/react";
+
+interface pinProps {
+  image: string;
+  title: string;
+}
 
 const PinScreen = () => {
   const [ratio, setRatio] = useState(1);
+  const nhost = useNhostClient();
+  const [pin, setPin] = useState<pinProps | null>(null);
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
   const { id }: any = route?.params;
-  const { image, title } = pins[id];
 
   useEffect(() => {
-    image && Image.getSize(image, (width, height) => setRatio(width / height));
-  }, [image]);
+    const fetchPin = async () => {
+      try {
+        const { data } = await nhost.graphql.request(`
+      query MyQuery {
+        pins_by_pk(id: "${id}") {
+          created_at
+          id
+          image
+          title
+          user_id
+          user {
+            avatarUrl
+            displayName
+          }
+        }
+      }
+      `);
+        setPin(data.pins_by_pk);
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      }
+    };
+    fetchPin();
+  }, []);
+
+  useEffect(() => {
+    pin?.image &&
+      Image.getSize(pin?.image, (width, height) => setRatio(width / height));
+  }, [Image]);
+
+  console.log(pin);
 
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>
       <StatusBar style="light" />
       <ScrollView style={styles.container}>
         <Image
-          source={{ uri: image }}
+          source={{ uri: pin?.image }}
           style={{ ...styles.image, aspectRatio: ratio }}
           resizeMode="cover"
         />
-        <Text style={{ ...styles.title }}>{title}</Text>
+        <Text style={{ ...styles.title }}>{pin?.title}</Text>
       </ScrollView>
       <Ionicons
         onPress={() => navigation.goBack()}

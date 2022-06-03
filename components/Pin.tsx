@@ -4,7 +4,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 
 interface Props {
-  id: string | number;
+  id: string;
   image: string;
   title: string;
 }
