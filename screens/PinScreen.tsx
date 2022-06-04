@@ -1,97 +1,72 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-  ScrollView,
-  Alert,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-//import pins from "../assets/data/pins";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useNhostClient } from "@nhost/react";
 
-interface pinProps {
-  image: string;
-  title: string;
+import { useNhostClient } from "@nhost/react";
+import RemoteImage from "../components/RemoteImage";
+
+const GET_PIN_QUERY = `
+query MyQuery ($id: uuid!) {
+  pins_by_pk(id: $id) {
+    created_at
+    id
+    image
+    title
+    user_id
+    user {
+      avatarUrl
+      displayName
+    }
+  }
 }
+`;
 
 const PinScreen = () => {
-  const [ratio, setRatio] = useState(1);
+  const [pin, setPin] = useState<any>(null);
   const nhost = useNhostClient();
-  const [pin, setPin] = useState<pinProps | null>(null);
-  const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
-  const { id }: any = route?.params;
+  const insets = useSafeAreaInsets();
+  const {id}: any = route?.params;
 
   useEffect(() => {
     const fetchPin = async () => {
-      try {
-        const { data } = await nhost.graphql.request(`
-      query MyQuery {
-        pins_by_pk(id: "${id}") {
-          created_at
-          id
-          image
-          title
-          user_id
-          user {
-            avatarUrl
-            displayName
-          }
-        }
-      }
-      `);
+      const {data} = await nhost.graphql.request(GET_PIN_QUERY, { id });
         setPin(data.pins_by_pk);
-      } catch (error: any) {
-        Alert.alert("Error", error.message);
-      }
     };
     fetchPin();
-  }, []);
+  }, [id]);
 
-  useEffect(() => {
-    pin?.image &&
-      Image.getSize(pin?.image, (width, height) => setRatio(width / height));
-  }, [Image]);
-
-  console.log(pin);
+  if (!pin) {
+    return <Text>Pin not found</Text>;
+  }
 
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>
       <StatusBar style="light" />
-      <ScrollView style={styles.container}>
-        <Image
-          source={{ uri: pin?.image }}
-          style={{ ...styles.image, aspectRatio: ratio }}
-          resizeMode="cover"
-        />
-        <Text style={{ ...styles.title }}>{pin?.title}</Text>
-      </ScrollView>
-      <Ionicons
+      <View style={styles.root}>
+        <RemoteImage fileId={pin.image} />
+        <Text style={styles.title}>{pin.title}</Text>
+      </View>
+
+      <Pressable
         onPress={() => navigation.goBack()}
-        name="chevron-back"
-        size={35}
-        color="white"
-        style={{ ...styles.icon, top: top + 20 }}
-      />
+        style={[styles.backBtn, { top: insets.top + 20 }]}
+      >
+        <Ionicons name={"chevron-back"} size={35} color={"white"} />
+      </Pressable>
     </SafeAreaView>
   );
 };
 
-export default PinScreen;
-
 const styles = StyleSheet.create({
-  container: {
+  root: {
     height: "100%",
     backgroundColor: "white",
     borderTopLeftRadius: 50,
@@ -103,14 +78,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   title: {
+    margin: 10,
     fontSize: 24,
     fontWeight: "600",
-    margin: 10,
     textAlign: "center",
     lineHeight: 35,
   },
-  icon: {
+  backBtn: {
     position: "absolute",
     left: 10,
   },
 });
+
+export default PinScreen;

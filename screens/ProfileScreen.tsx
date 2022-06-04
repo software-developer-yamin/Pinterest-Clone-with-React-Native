@@ -1,4 +1,5 @@
 import { Entypo, Feather } from "@expo/vector-icons";
+import { useSignOut } from "@nhost/react";
 import React from "react";
 import { Image, ScrollView, StyleSheet, useColorScheme } from "react-native";
 import pins from "../assets/data/pins";
@@ -8,12 +9,19 @@ import { Text, View } from "../components/Themed";
 export default function ProfileScreen() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
+  const { signOut } = useSignOut();
 
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.info}>
         <View style={styles.iconContainer}>
-          <Feather size={24} name="share" color="gray" style={styles.icon} />
+          <Feather
+            size={24}
+            name="share"
+            onPress={signOut}
+            color="gray"
+            style={styles.icon}
+          />
           <Entypo
             size={24}
             name="dots-three-horizontal"

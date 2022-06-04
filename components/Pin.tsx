@@ -2,6 +2,7 @@ import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from "react-
 import React, { useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import RemoteImage from "./RemoteImage";
 
 interface Props {
   id: string;
@@ -25,13 +26,7 @@ const Pin = ({ image, title, id }: Props) => {
       style={styles.container}
     >
       <View>
-        <Image
-          resizeMode="cover"
-          source={{
-            uri: image,
-          }}
-          style={{ ...styles.image, aspectRatio: ratio }}
-        />
+      <RemoteImage fileId={image} />
         <Pressable style={styles.heartBtn}>
           <AntDesign name="hearto" size={16} color="black" />
         </Pressable>

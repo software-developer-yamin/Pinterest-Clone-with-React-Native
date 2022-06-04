@@ -8,6 +8,7 @@ interface ICustomButton {
   type?: "PRIMARY" | "SECONDARY" | "TERTIARY";
   bgColor?: string;
   fgColor?: string;
+  isDisabled?: boolean;
 }
 
 const CustomButton = ({
@@ -16,9 +17,11 @@ const CustomButton = ({
   type = "PRIMARY",
   bgColor,
   fgColor,
+  isDisabled
 }: ICustomButton) => {
   return (
     <Pressable
+      
       onPress={onPress}
       style={[
         styles.container,

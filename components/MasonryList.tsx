@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   FlatList,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
@@ -11,12 +12,23 @@ import { Text, View } from "./Themed";
 
 interface Props {
   pins: IMasonryList[];
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 
-const MasonryList = ({ pins }: Props) => {
+const MasonryList = ({
+  pins,
+  refreshing = false,
+  onRefresh = () => {},
+}: Props) => {
   const numColumns = Math.ceil(useWindowDimensions().width / 350);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.container}>
         {Array.from(Array(numColumns)).map((_, colIndex) => (
           <View key={colIndex} style={styles.column}>
